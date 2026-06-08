@@ -110,3 +110,6 @@ echo
 echo "Done."
 echo "USB is ready for $HOSTNAME"
 echo "Username: gc"
+
+
+fi
