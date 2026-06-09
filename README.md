@@ -9,7 +9,41 @@ Before running the scripts, make sure you have:
   ~/Downloads/
 
 2. run: git clone https://github.com/royyona13/ubuntu_autoinstall.git
-3. Make sure extract and mnt folders are on the same place as the code (ubuntu_autoinstall).
+   
+3. Extract the Ubuntu ISO
+
+Mount and extract the Ubuntu ISO.
+
+The project directory should look like:
+
+ubuntu_autoinstall/
+├── build-gc-gui.py
+├── build-gc-iso.sh
+├── README.md
+├── mnt/
+└── extract/
+    ├── autoinstall/
+    │   ├── user-data.template
+    │   ├── meta-data
+    │   ├── postinstall-root.sh
+    │   ├── postinstall-root.service
+    │   ├── gc-first-login.sh.template
+    │   └── gc-first-login.desktop
+    │
+    ├── boot/
+    │   └── grub/
+    │       └── grub.cfg
+    │
+    ├── casper/
+    ├── EFI/
+    └── ...
+
+Notes:
+
+mnt/ contains the mounted ISO.
+extract/ contains the extracted ISO contents.
+extract/autoinstall/ contains all autoinstall configuration files.
+extract/boot/grub/grub.cfg contains the autoinstall boot configuration.
 
 4. Install required packages:
 
