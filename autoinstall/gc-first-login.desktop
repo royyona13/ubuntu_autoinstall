@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Exec=/home/gc/.local/bin/gc-first-login.sh
+X-GNOME-Autostart-enabled=true
+Name=First Login Setup

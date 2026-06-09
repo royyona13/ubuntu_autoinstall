@@ -1,0 +1,17 @@
+[Unit]
+Description=GC Post Install Setup
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/postinstall-root.sh
+
+# VERY IMPORTANT
+TimeoutStartSec=0
+TimeoutStopSec=0
+
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

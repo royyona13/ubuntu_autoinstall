@@ -1,0 +1,65 @@
+#cloud-config
+autoinstall:
+  version: 1
+
+  identity:
+    hostname: __HOSTNAME__
+    username: gc
+    realname: gc
+    password: "__USER_PASSWORD_HASH__"
+
+
+  locale: en_US.UTF-8
+
+  keyboard:
+    layout: us
+
+  timezone: Asia/Jerusalem
+
+  network:
+    version: 2
+    ethernets:
+      any:
+        match:
+          name: "*"
+        dhcp4: true
+        nameservers:
+          addresses:
+            - 8.8.8.8
+            
+            
+            
+        
+  storage:
+    layout:
+      name: lvm
+      password: "__LUKS_PASSWORD__"
+
+  ssh:
+    install-server: true
+    allow-pw: true
+
+  packages:
+    - openssh-server
+
+  late-commands:
+    - curtin in-target --target=/target -- apt update -y
+    - curtin in-target --target=/target -- apt upgrade -y
+
+    - curtin in-target --target=/target -- mkdir -p /usr/local/sbin
+    - curtin in-target --target=/target -- mkdir -p /home/gc/.config/autostart
+    - curtin in-target --target=/target -- mkdir -p /home/gc/.local/bin
+    - curtin in-target --target=/target -- mkdir -p /home/gc/.ssh
+    - curtin in-target --target=/target -- mkdir -p /home/gc/Downloads
+
+    - curtin in-target --target=/target -- cp /cdrom/autoinstall/postinstall-root.sh /usr/local/sbin/postinstall-root.sh
+    - curtin in-target --target=/target -- cp /cdrom/autoinstall/postinstall-root.service /etc/systemd/system/postinstall-root.service
+    - curtin in-target --target=/target -- cp /cdrom/autoinstall/gc-first-login.sh /home/gc/.local/bin/gc-first-login.sh
+    - curtin in-target --target=/target -- cp /cdrom/autoinstall/gc-first-login.desktop /home/gc/.config/autostart/gc-first-login.desktop
+
+    - curtin in-target --target=/target -- chmod 755 /usr/local/sbin/postinstall-root.sh
+    - curtin in-target --target=/target -- chmod 755 /home/gc/.local/bin/gc-first-login.sh
+    - curtin in-target --target=/target -- bash -c "id gc && chown -R gc:gc /home/gc/.config /home/gc/.local /home/gc/.ssh /home/gc/Downloads || true"
+    - curtin in-target --target=/target -- systemctl daemon-reload
+    - curtin in-target --target=/target -- systemctl enable postinstall-root.service
+    

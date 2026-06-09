@@ -1,0 +1,40 @@
+#!/bin/bash
+set -e
+
+USER_NAME="gc"
+RDP_PASS="__RDP_PASSWORD__"
+
+# wait for GNOME
+sleep 35
+
+# power settings
+gsettings set org.gnome.desktop.session idle-delay 900
+gsettings set org.gnome.desktop.screensaver lock-enabled false
+gsettings set org.gnome.desktop.screensaver ubuntu-lock-on-suspend false || true
+
+# Create GRD certificate
+mkdir -p "$HOME/.local/share/gnome-remote-desktop/certificates"
+
+openssl req -new -newkey rsa:4096 -days 3650 -nodes -x509 \
+  -subj "/CN=$(hostname)" \
+  -keyout "$HOME/.local/share/gnome-remote-desktop/certificates/rdp-tls.key" \
+  -out "$HOME/.local/share/gnome-remote-desktop/certificates/rdp-tls.crt"
+
+chmod 600 "$HOME/.local/share/gnome-remote-desktop/certificates/rdp-tls.key"
+chmod 644 "$HOME/.local/share/gnome-remote-desktop/certificates/rdp-tls.crt"
+
+grdctl rdp set-tls-key "$HOME/.local/share/gnome-remote-desktop/certificates/rdp-tls.key"
+grdctl rdp set-tls-cert "$HOME/.local/share/gnome-remote-desktop/certificates/rdp-tls.crt"
+
+# enable RDP
+grdctl rdp enable
+grdctl rdp disable-view-only
+grdctl rdp set-credentials $USER_NAME $RDP_PASS
+
+systemctl --user restart gnome-remote-desktop.service || true
+
+sudo systemctl restart teamviewerd.service || true
+
+
+# run once only
+rm -f ~/.config/autostart/gc-first-login.desktop
