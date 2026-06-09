@@ -17,11 +17,17 @@ Mount and extract the Ubuntu ISO.
 The project directory should look like:
 
 ubuntu_autoinstall/
+
 ├── build-gc-gui.py
+
 ├── build-gc-iso.sh
+
 ├── README.md
+
 ├── mnt/
+
 └── extract/
+
     ├── autoinstall/
     │   ├── user-data.template
     │   ├── meta-data
